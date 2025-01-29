@@ -1,0 +1,44 @@
+# Definição da região AWS
+region = "us-east-1"
+
+# Ambiente (dev, staging, prod)
+environment = "dev"
+
+# ID da VPC onde os recursos serão criados
+vpc_id = "vpc-06d92fe8a8a2338f0"
+
+# Subnets disponíveis para o ECS e ALB
+subnets = [
+  "subnet-0522f692a71b93afa",
+  "subnet-05f058473e31031e2",
+  "subnet-0e6fcadc1e484717b",
+  "subnet-01a3b68c5b08053e0",
+  "subnet-099e91ac697f2c4f7",
+  "subnet-06d4b5cee3e9e8977"
+]
+
+# Nome do cluster ECS
+ecs_cluster_name = "ml-cluster"
+
+# Nome do Security Group para ALB
+alb_security_group_name = "alb-security-group"
+
+# Nome do Security Group para ECS
+ecs_security_group_name = "ecs-security-group"
+
+# URL do repositório ECR
+ecr_repository_url = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ml-app"
+
+# Configuração do ECS Service
+ecs_desired_count = 1
+ecs_launch_type   = "FARGATE"
+
+# Configuração do ECS Task Definition
+ecs_task_family    = "ml-task"
+ecs_cpu            = "256"
+ecs_memory         = "512"
+ecs_container_name = "ml-container"
+ecs_container_port = 8000
+
+# ARN da role de execução do ECS Task
+ecs_execution_role_arn = "arn:aws:iam::123456789012:role/ecsTaskExecutionRole"
