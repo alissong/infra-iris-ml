@@ -32,7 +32,6 @@ jobs:
       - name: Validar credenciais AWS
         run: aws sts get-caller-identity
 
-
       - name: Check if Terraform is a directory
         run: |
           if [ -d "/usr/local/bin/terraform" ]; then
@@ -44,7 +43,6 @@ jobs:
         run: |
           sudo pkill -f terraform || true
           sudo rm -rf /usr/local/bin/terraform
-        
 
       - name: Install Terraform
         run: |
@@ -73,12 +71,14 @@ jobs:
   approval:
     needs: terraform-plan
     runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_PAT }}  # Use a personal access token with repo permissions
 
     steps:
       - name: Manual Approval
         uses: trstringer/manual-approval@v1
         with:
-          secret: ${{ secrets.GITHUB_TOKEN }}
+          secret: ${{ env.GITHUB_PAT }}
           approvers: alissong
           minimum-approvals: 1
           issue-title: "Approve Terraform Apply"
