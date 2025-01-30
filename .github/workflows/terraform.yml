@@ -23,10 +23,14 @@ jobs:
         with:
           terraform_version: 1.6.0  # Ajuste para a sua versão
 
-      - name: Instalar o AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
+      - name: Install AWS CLI
+        run: pip install awscli
+        
+
+      #- name: Instalar o AWS CLI
+      #  run: |
+      #    sudo apt-get update
+      #    sudo apt-get install -y awscli
 
       - name: Configurar credenciais da AWS
         uses: aws-actions/configure-aws-credentials@v1
