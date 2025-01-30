@@ -96,7 +96,8 @@ jobs:
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
-        - name: Check if Terraform is a directory
+
+      - name: Check if Terraform is a directory
         run: |
           if [ -d "/usr/local/bin/terraform" ]; then
             echo "Terraform is a directory. Removing..."
