@@ -72,13 +72,13 @@ jobs:
     needs: terraform-plan
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_PAT }}  # Use a personal access token with repo permissions
+      PAT_GITHUB: ${{ secrets.PAT_GITHUB }}  # Use a personal access token with repo permissions
 
     steps:
       - name: Manual Approval
         uses: trstringer/manual-approval@v1
         with:
-          secret: ${{ env.GITHUB_PAT }}
+          secret: ${{ env.PAT_GITHUB }}
           approvers: alissong
           minimum-approvals: 1
           issue-title: "Approve Terraform Apply"
