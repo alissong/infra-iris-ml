@@ -12,6 +12,10 @@ jobs:
   terraform-plan:
     name: "Executar Terraform Plan"
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout do código
@@ -20,21 +24,12 @@ jobs:
       - name: Install AWS CLI
         run: pip install awscli
 
-      - name: Debug - Verificar se AWS_ACCESS_KEY_ID existe
-        run: |
-          if [[ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]]; then
-            echo "❌ ERRO: AWS_ACCESS_KEY_ID não está definido nos Secrets do GitHub."
-            exit 1
-          else
-            echo "✅ AWS_ACCESS_KEY_ID está configurado corretamente."
-          fi
-
       - name: Configurar credenciais da AWS
-        uses: aws-actions/configure-aws-credentials@v2  # Atualize para v2
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Ajuste para sua região
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Validar credenciais AWS
         run: aws sts get-caller-identity
@@ -50,7 +45,6 @@ jobs:
         run: |
           sudo pkill -f terraform || true
           sudo rm -rf /usr/local/bin/terraform
-        
 
       - name: Install Terraform
         run: |
@@ -70,28 +64,8 @@ jobs:
 
       - name: Inicializar Terraform/Terragrunt
         working-directory: terraform
-        run: |
-          terragrunt init
+        run: terragrunt init
 
       - name: Executar Terraform Plan
         working-directory: terraform
-        run: |
-          terragrunt plan -out=tfplan
-
-      - name: Trigger Approval Workflow
-        uses: actions/github-script@v6
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            script: |
-              const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-              await octokit.rest.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'terraform-approval.yml',
-                ref: context.ref,
-                inputs: {
-                  approve: 'pending'
-                }
-              });
-  
+        run: terragrunt plan -out=tfplan

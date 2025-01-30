@@ -12,26 +12,16 @@ jobs:
   approval:
     name: "Aprovação Manual"
     runs-on: ubuntu-latest
-
-    outputs:
-      approve: ${{ steps.approval_step.outputs.approve }}
+    env:
+      PAT_GITHUB: ${{ secrets.PAT_GITHUB }}  # Use a personal access token with repo permissions
 
     steps:
-      - name: Aguardando Aprovação
-        run: echo "Aguardando aprovação manual no GitHub Actions..."
-
-      - name: Approval step
-        id: approval_step
-        run: echo "::set-output name=approve::yes"
-
-      - name: Verificar Decisão
-        id: check_approval
-        run: |
-          if [[ "${{ inputs.approve }}" == "yes" ]]; then
-            echo "Aprovação concedida. Continuando com o Terraform Apply."
-            echo "::set-output name=approve::yes"
-            gh workflow run terraform-apply.yml --ref ${{ github.ref }} --inputs approve=yes
-          else
-            echo "Aprovação negada. O processo será interrompido."
-            echo "::set-output name=approve::no"
-            exit 1
+      - name: Manual Approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ env.PAT_GITHUB }}
+          approvers: alissong
+          minimum-approvals: 1
+          issue-title: "Approve Terraform Apply"
+          issue-body: "Please approve or deny the deployment of the Terraform plan."
+          exclude-workflow-initiator-as-approver: false
