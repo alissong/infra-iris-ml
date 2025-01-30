@@ -47,18 +47,22 @@ jobs:
           sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
 
       - name: Inicializar Terraform/Terragrunt
+        working-directory: terraform
         run: |
           terragrunt init
 
       - name: Validar Terraform
+        working-directory: terraform
         run: |
           terragrunt validate
 
       - name: Gerar plano de execução (terraform plan)
+        working-directory: terraform
         run: |
           terragrunt plan -out=tfplan
 
       - name: Confirmação antes do Terraform Apply
+        working-directory: terraform
         run: |
           echo "🚀 Terraform Plan gerado com sucesso!"
           echo "⚠️ ATENÇÃO: O Terraform Apply será executado agora!"
