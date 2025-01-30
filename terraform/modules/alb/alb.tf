@@ -1,5 +1,5 @@
 resource "aws_lb" "ml_alb" {
-  name               = "ml-alb"
+  name               = "${var.resource_name_prefix}-ml-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
@@ -22,7 +22,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_security_group" "alb_sg" {
-  name        = "alb-sg"
+  name        = "${var.resource_name_prefix}-alb-sg"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
 
