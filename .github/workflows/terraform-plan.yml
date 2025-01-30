@@ -83,8 +83,8 @@ jobs:
         with:
           script: |
             const { context, getOctokit } = require('@actions/github');
-            const github = getOctokit(process.env.GITHUB_TOKEN);
-            await github.actions.createWorkflowDispatch({
+            const octokit = getOctokit(process.env.GITHUB_TOKEN);
+            await octokit.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'terraform-approval.yml',
