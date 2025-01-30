@@ -1,7 +1,7 @@
 name: "Aprovação Terraform"
 
 on:
-  workflow_dispatch:  # Permite que seja disparado manualmente
+  workflow_call: # Permite que este workflow seja chamado por outros workflows 
 
 jobs:
   approval:
