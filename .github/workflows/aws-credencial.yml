@@ -2,6 +2,12 @@ name: "Configurar Credenciais"
 
 on:
   workflow_call:  # Permite ser chamado por outros workflows
+    secrets:  # Permite receber os secrets
+        AWS_ACCESS_KEY_ID:
+          required: true
+        AWS_SECRET_ACCESS_KEY:
+          required: true
+
 
 jobs:
   configurar-credenciais:
