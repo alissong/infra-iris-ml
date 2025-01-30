@@ -21,7 +21,7 @@ jobs:
         run: |
           if [[ "${{ inputs.approve }}" == "yes" ]]; then
             echo "Aprovação concedida. Continuando com o Terraform Apply."
+            gh workflow run terraform-apply.yml --ref ${{ github.ref }} --inputs approve=yes
           else
             echo "Aprovação negada. O processo será interrompido."
             exit 1
-          fi

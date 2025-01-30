@@ -77,3 +77,18 @@ jobs:
         working-directory: terraform
         run: |
           terragrunt plan -out=tfplan
+
+      - name: Trigger Approval Workflow
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { context, github } = require('@actions/github');
+            await github.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'terraform-approval.yml',
+              ref: context.ref,
+              inputs: {
+                approve: 'pending'
+              }
+            });
