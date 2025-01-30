@@ -1,0 +1,25 @@
+# Ignorar diretórios e arquivos do Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
+
+# Ignorar arquivos de cache do Terraform
+.terraform/cache/
+
+# Ignorar arquivos de lock do Terragrunt
+.terragrunt-cache/
+.terragrunt-source-manifest
+.terragrunt-source-url
+
+# Ignorar arquivos de estado remoto do Terragrunt
+**/.terraform/terraform.tfstate
+**/.terraform/terraform.tfstate.backup
+
+# Ignorar arquivos de planos do Terragrunt
+**/*.tfplan

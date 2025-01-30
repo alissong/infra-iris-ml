@@ -18,27 +18,29 @@ subnets = [
 ]
 
 # Nome do cluster ECS
-ecs_cluster_name = "ml-cluster"
+ecs_cluster_name = "iris-ml-app-ecs-cluster"
 
 # Nome do Security Group para ALB
-alb_security_group_name = "alb-security-group"
+alb_security_group_name = "iris-ml-app-security-group"
 
 # Nome do Security Group para ECS
-ecs_security_group_name = "ecs-security-group"
+ecs_security_group_name = "iris-ml-app-security-group"
+
+security_group_name = "iris-ml-app-security-group"
 
 # URL do repositório ECR
-ecr_repository_url = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ml-app"
+ecr_repository_url = "123456789012.dkr.ecr.us-east-1.amazonaws.com/iris-ml-app-ecr"
 
 # Configuração do ECS Service
 ecs_desired_count = 1
 ecs_launch_type   = "FARGATE"
 
 # Configuração do ECS Task Definition
-ecs_task_family    = "ml-task"
+ecs_task_family    = "iris-ml-app-task"
 ecs_cpu            = "256"
 ecs_memory         = "512"
-ecs_container_name = "ml-container"
+ecs_container_name = "iris-ml-app-service"
 ecs_container_port = 8000
 
 # ARN da role de execução do ECS Task
-ecs_execution_role_arn = "arn:aws:iam::123456789012:role/ecsTaskExecutionRole"
+ecs_execution_role_arn = "arn:aws:iam::123456789012:role/iris-ml-app-ecs-execution-role"

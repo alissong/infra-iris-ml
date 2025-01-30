@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "ml_task" {
-  family                   = "ml-task"
+  family                   = var.ecs_task_family
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "ml_task" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "IrisMLecsTaskExecutionRole"
+  name = var.execution_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

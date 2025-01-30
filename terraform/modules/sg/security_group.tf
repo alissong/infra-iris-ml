@@ -1,5 +1,5 @@
 resource "aws_security_group" "ecs_sg" {
-  name        = "ecs-security-group"
+  name        = var.security_group_name
   description = "Security group para o ECS"
   vpc_id      = var.vpc_id
 

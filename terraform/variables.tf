@@ -111,3 +111,23 @@ variable "ecs_container_name" {
   type        = string
   description = "Nome do container ECS"
 }
+
+variable "security_group_name" {
+  type        = string
+  description = "Nome do Security Group para o ECS"
+}
+
+variable "execution_role_name" {
+  type        = string
+  description = "Nome da Role de execução do ECS Task"
+}
+
+variable "ecs_service_name" {
+  type        = string
+  description = "Nome do ECS Service"
+}
+
+variable "ecr_repository_name" {
+  type        = string
+  description = "Nome do repositório ECR"
+}

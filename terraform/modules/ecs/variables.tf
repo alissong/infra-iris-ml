@@ -68,3 +68,18 @@ variable "ecs_task_definition_arn" {
   type        = string
   description = "ARN da Task Definition do ECS"
 }
+
+variable "execution_role_name" {
+  type        = string
+  description = "ARN da Role de execução do ECS Task"
+}
+
+variable "ecs_task_family" {
+  type        = string
+  description = "Nome da família da Task ECS"
+}
+
+variable "ecs_service_name" {
+  type        = string
+  description = "Nome do serviço ECS"
+}
