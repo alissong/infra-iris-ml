@@ -80,7 +80,7 @@ jobs:
         run: |
           terragrunt plan -out=tfplan
 
-      - name: Confirmação antes do Terraform Apply
+      - name: Verificar aprovação para Apply
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.approve == 'yes'
         working-directory: terraform
         run: |
@@ -88,8 +88,14 @@ jobs:
           echo "✅ Aprovação recebida. Continuando com Terraform Apply..."
           terragrunt apply -auto-approve
 
-      - name: Cancelar Terraform Apply
+      - name: Cancelar Apply se não aprovado
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.approve == 'no'
         run: |
           echo "❌ Deploy cancelado pelo usuário."
           exit 1
+
+      - name: Pular Apply em execuções automáticas
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          echo "⚠️ Execução automática detectada. O Apply não será executado."
+          echo "ℹ️ Para executar o Apply, acione o workflow manualmente com 'approve: yes'."
