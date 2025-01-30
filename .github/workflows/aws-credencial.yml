@@ -11,7 +11,7 @@ on:
 
 jobs:
   configurar-credenciais:
-    name: "Configurar Credenciais da AWS"
+    name: "Credenciais da AWS"
     runs-on: ubuntu-latest
 
     steps:

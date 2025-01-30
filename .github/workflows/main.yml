@@ -16,6 +16,8 @@ jobs:
   approval:
     needs: terraform-plan
     uses: ./.github/workflows/terraform-approval.yml
+    secrets:
+      PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
     with:
       approve: true
 
