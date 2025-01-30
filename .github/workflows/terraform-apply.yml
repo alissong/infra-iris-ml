@@ -1,15 +1,8 @@
 name: "Terraform Apply"
 
 on:
-  workflow_dispatch:  # Permite rodar manualmente via GitHub Actions
-    inputs:
-      approve:
-        description: 'Approve the Terraform apply?'
-        required: true
-        type: choice
-        options:
-          - yes
-          - no
+  workflow_call:  # Permite que este workflow seja chamado por outros workflows
+
 
 jobs:
   terraform-apply:
