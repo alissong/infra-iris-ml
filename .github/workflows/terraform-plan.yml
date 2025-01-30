@@ -82,12 +82,13 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const github = require('@actions/github');
+            const { context, getOctokit } = require('@actions/github');
+            const github = getOctokit(process.env.GITHUB_TOKEN);
             await github.actions.createWorkflowDispatch({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               workflow_id: 'terraform-approval.yml',
-              ref: github.context.ref,
+              ref: context.ref,
               inputs: {
                 approve: 'pending'
               }
