@@ -1,0 +1,71 @@
+name: "Terraform Apply"
+
+on:
+  push:
+    branches:
+      - main  # Executa quando há um push na branch main
+  workflow_dispatch:  # Permite rodar manualmente via GitHub Actions
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: "Deploy Infra via Terraform + Terragrunt"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar o Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0  # Ajuste para a sua versão
+
+      - name: Instalar o AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Configurar credenciais da AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Ajuste para sua região
+
+      - name: Instalar o Terragrunt
+        run: |
+          TERRAGRUNT_VERSION="0.53.0"
+          wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64
+          chmod +x terragrunt_linux_amd64
+          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
+      - name: Inicializar Terraform/Terragrunt
+        run: |
+          terragrunt init
+
+      - name: Validar Terraform
+        run: |
+          terragrunt validate
+
+      - name: Gerar plano de execução (terraform plan)
+        run: |
+          terragrunt plan -out=tfplan
+
+      - name: Confirmação antes do Terraform Apply
+        run: |
+          echo "🚀 Terraform Plan gerado com sucesso!"
+          echo "⚠️ ATENÇÃO: O Terraform Apply será executado agora!"
+          echo "Digite 'yes' para confirmar ou qualquer outra coisa para cancelar."
+          read -p "Continuar? (yes/no): " CONFIRM
+          if [[ "$CONFIRM" != "yes" ]]; then
+            echo "❌ Deploy cancelado pelo usuário."
+            exit 1
+          fi
+          echo "✅ Continuando com Terraform Apply..."
+
+      - name: Aplicar infraestrutura (terraform apply)
+        run: |
+          terragrunt apply -auto-approve
