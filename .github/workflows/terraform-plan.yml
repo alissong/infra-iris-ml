@@ -1,5 +1,3 @@
-name: "Terraform Plan"
-
 on:
   workflow_call:  # Permite que este workflow seja chamado por outros workflows
     secrets:  # Permite receber os secrets
