@@ -2,7 +2,11 @@ name: "Terraform Apply"
 
 on:
   workflow_call:  # Permite que este workflow seja chamado por outros workflows
-
+    inputs:
+      approve:
+        description: "Aprovação para aplicar mudanças no Terraform (yes/no)"
+        required: true
+        type: string
 
 jobs:
   terraform-apply:

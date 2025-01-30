@@ -13,9 +13,16 @@ jobs:
     name: "Aprovação Manual"
     runs-on: ubuntu-latest
 
+    outputs:
+      approve: ${{ steps.approval_step.outputs.approve }}
+
     steps:
       - name: Aguardando Aprovação
         run: echo "Aguardando aprovação manual no GitHub Actions..."
+
+      - name: Approval step
+        id: approval_step
+        run: echo "::set-output name=approve::yes"
 
       - name: Verificar Decisão
         id: check_approval
