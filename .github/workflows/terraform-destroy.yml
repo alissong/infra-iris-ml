@@ -1,10 +1,7 @@
+name: "Terraform Destroy"
+
 on:
-    workflow_call:  # Permite que este workflow seja chamado por outros workflows
-      secrets:  # Permite receber os secrets
-       AWS_ACCESS_KEY_ID:
-         required: true
-       AWS_SECRET_ACCESS_KEY:
-         required: true
+  workflow_dispatch:  # Permite rodar manualmente via GitHub Actions
 
 jobs:
   terraform-destroy:
@@ -65,15 +62,7 @@ jobs:
         run: terragrunt init
 
       - name: Executar Terraform Destroy
-        if: ${{ needs.approval.outputs.approved }} == 'true'
         working-directory: terraform
         run: |
           echo "🚀 Terraform Destroy iniciado!"
-          echo "✅ Aprovação recebida. Continuando com Terraform Destroy..."
           terragrunt destroy -auto-approve
-
-      - name: Cancelar Destroy se não aprovado
-        if: ${{ needs.approval.outputs.approved }} != 'true'
-        run: |
-          echo "❌ Destroy cancelado pelo usuário."
-          exit 1

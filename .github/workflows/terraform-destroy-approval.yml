@@ -1,0 +1,38 @@
+name: "Terraform Destroy Approval"
+
+on:
+  workflow_dispatch:  # Permite rodar manualmente via GitHub Actions
+
+jobs:
+  approval:
+    runs-on: ubuntu-latest
+    env:
+      PAT_GITHUB: ${{ secrets.PAT_GITHUB }}  # Use a personal access token with repo permissions
+
+    steps:
+      - name: Manual Approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ env.PAT_GITHUB }}
+          approvers: alissong
+          minimum-approvals: 1
+          issue-title: "Approve Terraform Destroy"
+          issue-body: "Please approve or deny the destruction of the Terraform resources."
+          exclude-workflow-initiator-as-approver: false
+
+      - name: Trigger Terraform Destroy
+        if: ${{ steps.manual-approval.outputs.approved }} == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { context, getOctokit } = require('@actions/github');
+            const octokit = getOctokit(process.env.PAT_GITHUB);
+            await octokit.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'terraform-destroy.yml',
+              ref: context.ref,
+              inputs: {
+                approve: 'true'
+              }
+            });
