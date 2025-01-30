@@ -7,30 +7,104 @@ on:
   workflow_dispatch:  # Permite rodar manualmente via GitHub Actions
 
 jobs:
-#  configurar-credenciais:
-#    uses: ./.github/workflows/aws-credencial.yml
-#    secrets:
-#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-#  configurar-terraform:
-#    needs: configurar-credenciais
-#    uses: ./.github/workflows/terraform-config.yml
-
   terraform-plan:
-    uses: ./.github/workflows/terraform-plan.yml
+    name: "Executar Terraform Plan"
+    runs-on: ubuntu-latest
     secrets:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Install AWS CLI
+        run: pip install awscli
+
+      - name: Configurar credenciais da AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Validar credenciais AWS
+        run: aws sts get-caller-identity
+
+      - name: Install Terraform and Terragrunt
+        run: |
+          wget -q https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_linux_amd64.zip
+          unzip -o terraform_1.10.5_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform --version
+          wget https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
+          chmod +x terragrunt_linux_amd64
+          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+          terragrunt --version
+
+      - name: Inicializar Terraform/Terragrunt
+        working-directory: terraform
+        run: terragrunt init
+
+      - name: Executar Terraform Plan
+        working-directory: terraform
+        run: terragrunt plan -out=tfplan
+
+      - name: Trigger Approval Workflow
+        uses: actions/github-script@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const { context, getOctokit } = require('@actions/github');
+            const octokit = getOctokit(process.env.GITHUB_TOKEN);
+            await octokit.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'main.yml',
+              ref: context.ref,
+              inputs: {
+                approve: 'pending'
+              }
+            });
 
   approval:
     needs: terraform-plan
-    uses: ./.github/workflows/terraform-approval.yml
-    with:
-      approve: yes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Aguardando Aprovação
+        run: echo "Aguardando aprovação manual no GitHub Actions..."
+
+      - name: Verificar Decisão
+        id: check_approval
+        run: |
+          if [[ "${{ github.event.inputs.approve }}" == "yes" ]]; then
+            echo "Aprovação concedida. Continuando com o Terraform Apply."
+            echo "::set-output name=approve::yes"
+          else
+            echo "Aprovação negada. O processo será interrompido."
+            echo "::set-output name=approve::no"
+            exit 1
 
   terraform-apply:
     needs: approval
-    uses: ./.github/workflows/terraform-apply.yml
-    with:
-      approve: ${{ needs.approval.outputs.approve }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Verificar aprovação para Apply
+        if: ${{ needs.approval.outputs.approve }} == 'yes'
+        working-directory: terraform
+        run: |
+          echo "🚀 Terraform Plan gerado com sucesso!"
+          echo "✅ Aprovação recebida. Continuando com Terraform Apply..."
+          terragrunt apply -auto-approve
+
+      - name: Cancelar Apply se não aprovado
+        if: ${{ needs.approval.outputs.approve }} == 'no'
+        run: |
+          echo "❌ Deploy cancelado pelo usuário."
+          exit 1
