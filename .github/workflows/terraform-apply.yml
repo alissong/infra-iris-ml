@@ -1,0 +1,35 @@
+name: "Terraform Apply"
+
+on:
+  workflow_dispatch:  # Permite rodar manualmente via GitHub Actions
+    inputs:
+      approve:
+        description: 'Approve the Terraform apply?'
+        required: true
+        type: choice
+        options:
+          - yes
+          - no
+
+jobs:
+  terraform-apply:
+    name: "Executar Terraform Apply"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Verificar aprovação para Apply
+        if: github.event.inputs.approve == 'yes'
+        working-directory: terraform
+        run: |
+          echo "🚀 Terraform Plan gerado com sucesso!"
+          echo "✅ Aprovação recebida. Continuando com Terraform Apply..."
+          terragrunt apply -auto-approve
+
+      - name: Cancelar Apply se não aprovado
+        if: github.event.inputs.approve == 'no'
+        run: |
+          echo "❌ Deploy cancelado pelo usuário."
+          exit 1

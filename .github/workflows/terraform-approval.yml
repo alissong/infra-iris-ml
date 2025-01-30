@@ -1,0 +1,16 @@
+name: "Aprovação Terraform"
+
+on:
+  workflow_dispatch:  # Permite que seja disparado manualmente
+
+jobs:
+  approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Esperando Aprovação Manual
+        uses: hmarr/auto-approve-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Mensagem de Aprovação
+        run: echo "Aprovação concedida. Continuando para Terraform Apply."
