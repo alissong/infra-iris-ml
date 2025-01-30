@@ -1,16 +1,25 @@
 name: "Aprovação Terraform"
 
 on:
-  workflow_call: # Permite que este workflow seja chamado por outros workflows 
+  workflow_call:
+    inputs:
+      approve:
+        description: "Aprovação para continuar com o Terraform Apply (yes/no)"
+        required: true
+        type: string
 
 jobs:
   approval:
     runs-on: ubuntu-latest
     steps:
-      - name: Esperando Aprovação Manual
-        uses: hmarr/auto-approve-action@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Exibir Mensagem de Aprovação
+        run: echo "Aguardando aprovação manual no GitHub Actions..."
 
-      - name: Mensagem de Aprovação
-        run: echo "Aprovação concedida. Continuando para Terraform Apply."
+      - name: Decisão de Aprovação
+        run: |
+          if [[ "${{ inputs.approve }}" == "yes" ]]; then
+            echo "Aprovação concedida. Continuando com o Terraform Apply."
+          else
+            echo "Aprovação negada. O processo será interrompido."
+            exit 1
+          fi

@@ -25,6 +25,6 @@ jobs:
       approve: ${{ github.event.inputs.approve || 'no' }}
 
   terraform-apply:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.approve == 'yes'
+    if: github.event.inputs.approve == 'yes'
     needs: approval
     uses: ./.github/workflows/terraform-apply.yml
