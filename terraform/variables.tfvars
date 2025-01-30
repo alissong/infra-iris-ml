@@ -23,6 +23,8 @@ ecs_cluster_name = "iris-ml-app-ecs-cluster"
 # Nome do Security Group para ALB
 alb_security_group_name = "iris-ml-app-security-group"
 
+alb_security_group_id = "sg-0b3b3b3b3b3b3b3b3"
+
 # Nome do Security Group para ECS
 ecs_security_group_name = "iris-ml-app-security-group"
 

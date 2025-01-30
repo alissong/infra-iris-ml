@@ -1,31 +1,3 @@
-#variable "subnets" {
-#  type        = list(string)
-#  description = "Subnets para o ALB e ECS."
-#}
-#
-#variable "vpc_id" {
-#  type        = string
-#  description = "ID da VPC onde os recursos serão criados."
-#}
-#
-#variable "ecs_cluster_name" {
-#  type        = string
-#  description = "Nome do Cluster ECS"
-#  default     = "irisml-ecs-cluster"
-#}
-#
-#variable "environment" {
-#  type        = string
-#  description = "Nome do ambiente (dev, staging, prod)"
-#  default     = "dev"
-#}
-#
-#variable "ecs_memory" {
-#  type        = string
-#  description = "Memória para a ECS Task"
-#  default     = "512"
-#}
-
 variable "region" {
   type        = string
   description = "Região AWS"
@@ -130,4 +102,9 @@ variable "ecs_service_name" {
 variable "ecr_repository_name" {
   type        = string
   description = "Nome do repositório ECR"
+}
+
+variable "alb_security_group_id" {
+  type        = string
+  description = "ID do Security Group do ALB."
 }

@@ -6,6 +6,7 @@ locals {
   execution_role_name   = "${local.prefix}-ecs-execution-role"
   ecs_task_family       = "${local.prefix}-task"
   ecs_service_name      = "${local.prefix}-service"
+  alb_security_group_id = "${local.prefix}-alb-security-group"
 }
 
 terraform {
@@ -30,6 +31,7 @@ inputs = {
   execution_role_name     = local.execution_role_name
   ecs_service_name    = local.ecs_service_name
   ecr_repository_name = local.ecr_repository_name
+  alb_security_group_id = local.alb_security_group_id
 
   vpc_id               = "vpc-06d92fe8a8a2338f0"
   ecs_cluster_name     = "ml-cluster"

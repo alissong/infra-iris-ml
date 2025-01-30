@@ -1,134 +1,156 @@
-# Terraform Infrastructure for Iris ML Application
+# Infraestrutura para Aplicação Iris ML
 
-This repository contains Terraform configurations for setting up the infrastructure required for the Iris ML application. The infrastructure includes an ECS cluster, ECR repository, and security groups.
+Este projeto configura a infraestrutura necessária para a aplicação Iris ML utilizando Terraform e Terragrunt. A infraestrutura inclui:
 
-## Modules
+- Repositório ECR para armazenar imagens Docker
+- Cluster ECS para executar containers
+- ALB para balanceamento de carga e acesso externo via HTTPS
+- Grupos de segurança para controlar o tráfego de rede
 
-### ECR Module
+## Estrutura dos Módulos
 
-This module creates an ECR repository for storing Docker images.
+- **ecr**: Configura o repositório ECR.
+- **ecs**: Configura o cluster ECS, task definition e serviço.
+- **alb**: Configura o Application Load Balancer.
+- **sg**: Configura os grupos de segurança.
+
+## Variáveis
+
+As variáveis principais utilizadas no projeto são:
 
 ```hcl
-module "ecr" {
-  source = "./modules/ecr"
+variable "region" {
+  type        = string
+  description = "Região AWS"
+  default     = "us-east-1"
+}
 
-  ecr_repository_name = "iris-ml-app-ecr"
+variable "environment" {
+  type        = string
+  description = "Nome do ambiente (dev, staging, prod)"
+  default     = "dev"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "ID da VPC onde os recursos serão criados"
+}
+
+variable "subnets" {
+  type        = list(string)
+  description = "Lista de subnets para o ALB e ECS"
+}
+
+variable "ecs_cluster_name" {
+  type        = string
+  description = "Nome do cluster ECS"
+}
+
+variable "alb_security_group_name" {
+  type        = string
+  description = "Nome do Security Group do ALB"
+}
+
+variable "ecs_security_group_name" {
+  type        = string
+  description = "Nome do Security Group do ECS"
+}
+
+variable "ecr_repository_url" {
+  type        = string
+  description = "URL do repositório ECR para armazenar as imagens do ECS"
+}
+
+variable "ecs_desired_count" {
+  type        = number
+  description = "Número desejado de instâncias no ECS Service"
+}
+
+variable "ecs_execution_role_arn" {
+  type        = string
+  description = "ARN da Role de execução do ECS Task"
+}
+
+variable "ecs_container_port" {
+  type        = number
+  description = "Porta usada pelo container ECS"
+  default     = 8000
+}
+
+variable "ecs_launch_type" {
+  type        = string
+  description = "Tipo de lançamento do ECS (EC2 ou FARGATE)"
+  default     = "FARGATE"
+}
+
+variable "ecs_task_family" {
+  type        = string
+  description = "Nome da família da Task Definition"
+}
+
+variable "ecs_cpu" {
+  type        = string
+  description = "CPU para a ECS Task"
+  default     = "256"
+}
+
+variable "ecs_memory" {
+  type        = string
+  description = "Memória para a ECS Task"
+  default     = "512"
+}
+
+variable "ecs_container_name" {
+  type        = string
+  description = "Nome do container ECS"
+}
+
+variable "security_group_name" {
+  type        = string
+  description = "Nome do Security Group para o ECS"
+}
+
+variable "execution_role_name" {
+  type        = string
+  description = "Nome da Role de execução do ECS Task"
+}
+
+variable "ecs_service_name" {
+  type        = string
+  description = "Nome do ECS Service"
+}
+
+variable "ecr_repository_name" {
+  type        = string
+  description = "Nome do repositório ECR"
+}
+
+variable "alb_security_group_id" {
+  type        = string
+  description = "ID do Security Group do ALB."
 }
 ```
 
-### ECS Module
+## Dependências
 
-This module creates an ECS task definition for running the ML application.
+Os módulos possuem as seguintes dependências:
 
-```hcl
-module "ecs" {
-  source = "./modules/ecs"
+- O módulo `sg` deve ser criado antes dos módulos `alb` e `ecs`.
+- O módulo `ecr` deve ser criado antes do módulo `ecs`.
+- O módulo `alb` deve ser criado antes do módulo `ecs`.
 
-  ecs_task_family       = var.ecs_task_family
-  ecr_repository_url    = var.ecr_repository_url
-  execution_role_name   = var.execution_role_name
-}
+## Comandos
+
+Para aplicar as configurações, utilize os seguintes comandos:
+
+```sh
+terragrunt init
+terragrunt plan
+terragrunt apply
 ```
 
-### Security Group Module
+Certifique-se de que todas as variáveis necessárias estão definidas no arquivo `variables.tfvars`.
 
-This module creates security groups for the ECS tasks.
+## Licença
 
-```hcl
-module "sg" {
-  source = "./modules/sg"
-
-  security_group_name = var.security_group_name
-  vpc_id              = var.vpc_id
-}
-```
-
-## Variables
-
-### variables.tfvars
-
-```hcl
-# Definição da região AWS
-region = "us-east-1"
-
-# Ambiente (dev, staging, prod)
-environment = "dev"
-
-# ID da VPC onde os recursos serão criados
-vpc_id = "vpc-06d92fe8a8a2338f0"
-
-# Subnets disponíveis para o ECS e ALB
-subnets = [
-  "subnet-0522f692a71b93afa",
-  "subnet-05f058473e31031e2",
-  "subnet-0e6fcadc1e484717b",
-  "subnet-01a3b68c5b08053e0",
-  "subnet-099e91ac697f2c4f7",
-  "subnet-06d4b5cee3e9e8977"
-]
-
-# Nome do cluster ECS
-ecs_cluster_name = "iris-ml-app-ecs-cluster"
-
-# Nome do Security Group para ALB
-alb_security_group_name = "iris-ml-app-security-group"
-
-# Nome do Security Group para ECS
-ecs_security_group_name = "iris-ml-app-security-group"
-
-security_group_name = "iris-ml-app-security-group"
-
-# URL do repositório ECR
-ecr_repository_url = "123456789012.dkr.ecr.us-east-1.amazonaws.com/iris-ml-app-ecr"
-
-# Configuração do ECS Service
-ecs_desired_count = 1
-ecs_launch_type   = "FARGATE"
-
-# Configuração do ECS Task Definition
-ecs_task_family    = "iris-ml-app-task"
-ecs_cpu            = "256"
-ecs_memory         = "512"
-ecs_container_name = "iris-ml-app-service"
-ecs_container_port = 8000
-
-# ARN da role de execução do ECS Task
-ecs_execution_role_arn = "arn:aws:iam::123456789012:role/iris-ml-app-ecs-execution-role"
-```
-
-## Usage
-
-1. Initialize Terraform:
-   ```sh
-   terraform init
-   ```
-
-2. Plan the infrastructure changes:
-   ```sh
-   terraform plan -var-file=./variables.tfvars
-   ```
-
-3. Apply the infrastructure changes:
-   ```sh
-   terraform apply -var-file=./variables.tfvars
-   ```
-
-## Import Existing Resources
-
-If the resources already exist, you can import them into the Terraform state:
-
-1. Import the ECR repository:
-   ```sh
-   terraform import module.ecr.aws_ecr_repository.ml_app <repository_arn>
-   ```
-
-2. Import the Security Group:
-   ```sh
-   terraform import module.sg.aws_security_group.ecs_sg <security_group_id>
-   ```
-
-Replace `<repository_arn>` and `<security_group_id>` with the appropriate values.
-
-## License
-
-This project is licensed under the MIT License.
+Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
