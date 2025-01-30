@@ -2,6 +2,9 @@ name: "Terraform Approval"
 
 on:
   workflow_call:
+    secrets:
+      PAT_GITHUB:
+        required: true
     inputs:
       approve:
         description: "Aprovação para aplicar mudanças no Terraform (yes/no)"
