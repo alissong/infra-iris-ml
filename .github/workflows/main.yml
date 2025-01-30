@@ -79,7 +79,7 @@ jobs:
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: user1,user2,org-team1
+          approvers: alissong
           minimum-approvals: 1
           issue-title: "Approve Terraform Apply"
           issue-body: "Please approve or deny the deployment of the Terraform plan."
