@@ -18,10 +18,13 @@ jobs:
         run: echo "Aguardando aprovação manual no GitHub Actions..."
 
       - name: Verificar Decisão
+        id: check_approval
         run: |
           if [[ "${{ inputs.approve }}" == "yes" ]]; then
             echo "Aprovação concedida. Continuando com o Terraform Apply."
+            echo "::set-output name=approve::yes"
             gh workflow run terraform-apply.yml --ref ${{ github.ref }} --inputs approve=yes
           else
             echo "Aprovação negada. O processo será interrompido."
+            echo "::set-output name=approve::no"
             exit 1

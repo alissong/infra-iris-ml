@@ -30,6 +30,7 @@ jobs:
       approve: yes
 
   terraform-apply:
-    if: github.event.inputs.approve == 'yes'
     needs: approval
     uses: ./.github/workflows/terraform-apply.yml
+    with:
+      approve: ${{ needs.approval.outputs.approve }}
