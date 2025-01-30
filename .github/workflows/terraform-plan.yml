@@ -12,6 +12,12 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      - name: Instalar Terragrunt
+        run: |
+          curl -L -o terragrunt https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
+          chmod +x terragrunt
+          sudo mv terragrunt /usr/local/bin/
+
       - name: Executar Terraform Plan
         working-directory: terraform
         run: |
