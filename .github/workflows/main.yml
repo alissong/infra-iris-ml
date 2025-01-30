@@ -32,17 +32,15 @@ jobs:
       - name: Validar credenciais AWS
         run: aws sts get-caller-identity
 
-      - name: Check if Terraform is a directory
+      - name: Remove existing Terraform installation
         run: |
           if [ -d "/usr/local/bin/terraform" ]; then
             echo "Terraform is a directory. Removing..."
             sudo rm -rf /usr/local/bin/terraform
-          fi 
-      
-      - name: Force remove old Terraform
-        run: |
-          sudo pkill -f terraform || true
-          sudo rm -rf /usr/local/bin/terraform
+          elif [ -f "/usr/local/bin/terraform" ]; then
+            echo "Terraform is a file. Removing..."
+            sudo rm -f /usr/local/bin/terraform
+          fi
 
       - name: Install Terraform and Terragrunt
         run: |
