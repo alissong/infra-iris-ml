@@ -33,6 +33,7 @@ module "alb" {
   subnets = var.subnets
   alb_security_group_id = module.sg.alb_security_group_id
   resource_name_prefix = local.prefix
+  acm_certificate_arn = var.acm_certificate_arn
 
   depends_on = [
     module.sg # Garante que o módulo sg seja criado antes do ALB

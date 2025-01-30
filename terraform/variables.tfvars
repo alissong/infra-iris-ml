@@ -51,3 +51,6 @@ ecs_container_port = 8000
 
 # ARN da role de execução do ECS Task
 ecs_execution_role_arn = "arn:aws:iam::123456789012:role/iris-ml-app-ecs-execution-role"
+
+# ARN do certificado ACM para HTTPS
+acm_certificate_arn = "arn:aws:acm:us-east-1:338846672827:certificate/5591839b-8804-4ca9-a133-4203d80aa6eb"

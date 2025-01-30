@@ -1,3 +1,8 @@
+variable "resource_name_prefix" {
+  type        = string
+  description = "Prefixo para os nomes dos recursos"
+}
+
 variable "vpc_id" {
   type        = string
   description = "ID da VPC onde os Security Groups serão criados"
