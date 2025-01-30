@@ -27,7 +27,7 @@ jobs:
     needs: terraform-plan
     uses: ./.github/workflows/terraform-approval.yml
     with:
-      approve: ${{ github.event.inputs.approve || 'no' }}
+      approve: yes
 
   terraform-apply:
     if: github.event.inputs.approve == 'yes'

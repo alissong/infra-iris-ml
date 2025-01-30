@@ -1,21 +1,23 @@
-name: "Aprovação Terraform"
+name: "Terraform Approval"
 
 on:
   workflow_call:
     inputs:
       approve:
-        description: "Aprovação para continuar com o Terraform Apply (yes/no)"
+        description: "Aprovação para aplicar mudanças no Terraform (yes/no)"
         required: true
         type: string
 
 jobs:
   approval:
+    name: "Aprovação Manual"
     runs-on: ubuntu-latest
+
     steps:
-      - name: Exibir Mensagem de Aprovação
+      - name: Aguardando Aprovação
         run: echo "Aguardando aprovação manual no GitHub Actions..."
 
-      - name: Decisão de Aprovação
+      - name: Verificar Decisão
         run: |
           if [[ "${{ inputs.approve }}" == "yes" ]]; then
             echo "Aprovação concedida. Continuando com o Terraform Apply."
