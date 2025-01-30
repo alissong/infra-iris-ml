@@ -18,10 +18,18 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Instalar o Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.6.0  # Ajuste para a sua versão
+      - name: Install Terraform
+        run: |
+          wget https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_linux_amd64.zip
+          unzip terraform_1.10.5_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform --version
+      
+
+      #- name: Instalar o Terraform
+      #  uses: hashicorp/setup-terraform@v2
+      #  with:
+      #    terraform_version: 1.6.0  # Ajuste para a sua versão
 
       - name: Install AWS CLI
         run: pip install awscli
@@ -39,12 +47,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Ajuste para sua região
 
-      - name: Instalar o Terragrunt
+      - name: Install Terragrunt
         run: |
-          TERRAGRUNT_VERSION="0.53.0"
-          wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64
+          wget https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
           chmod +x terragrunt_linux_amd64
           sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+          terragrunt --version
 
       - name: Inicializar Terraform/Terragrunt
         working-directory: terraform
