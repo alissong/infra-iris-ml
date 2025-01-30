@@ -8,11 +8,11 @@ on:
 
 jobs:
   configurar-credenciais:
-    uses: ./.github/workflows/configurar-credenciais.yml
+    uses: ./.github/workflows/aws-credencial.yml
 
   configurar-terraform:
     needs: configurar-credenciais
-    uses: ./.github/workflows/configurar-terraform.yml
+    uses: ./.github/workflows/terraform-config.yml
 
   terraform-plan:
     needs: configurar-terraform
