@@ -2,6 +2,11 @@ name: "Terraform Plan"
 
 on:
   workflow_call:  # Permite que este workflow seja chamado por outros workflows
+    secrets:  # Permite receber os secrets
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
 
 jobs:
   terraform-plan:
