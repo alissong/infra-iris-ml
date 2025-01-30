@@ -8,14 +8,14 @@ on:
 
 jobs:
   terraform-plan:
-    uses: ./.github/workflows/terraform-plan.yml
+    uses: ./.github/workflows/create/terraform-plan.yml
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   approval:
     needs: terraform-plan
-    uses: ./.github/workflows/terraform-approval.yml
+    uses: ./.github/workflows/create/terraform-approval.yml
     secrets:
       PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
     with:
@@ -23,7 +23,7 @@ jobs:
 
   terraform-apply:
     needs: approval
-    uses: ./.github/workflows/terraform-apply.yml
+    uses: ./.github/workflows/create/terraform-apply.yml
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
