@@ -7,18 +7,17 @@ on:
   workflow_dispatch:  # Permite rodar manualmente via GitHub Actions
 
 jobs:
-  configurar-credenciais:
-    uses: ./.github/workflows/aws-credencial.yml
-    secrets:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#  configurar-credenciais:
+#    uses: ./.github/workflows/aws-credencial.yml
+#    secrets:
+#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 #  configurar-terraform:
 #    needs: configurar-credenciais
 #    uses: ./.github/workflows/terraform-config.yml
 
   terraform-plan:
-    needs: configurar-credenciais
     uses: ./.github/workflows/terraform-plan.yml
 
   approval:
