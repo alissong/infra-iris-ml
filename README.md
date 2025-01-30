@@ -1,3 +1,24 @@
+# Infraestrutura para Aplicação Iris ML
+
+Este projeto configura a infraestrutura necessária para a aplicação Iris ML utilizando Terraform e Terragrunt. A infraestrutura inclui:
+
+- Repositório ECR para armazenar imagens Docker
+- Cluster ECS para executar containers
+- ALB para balanceamento de carga e acesso externo via HTTPS
+- Grupos de segurança para controlar o tráfego de rede
+
+## Estrutura dos Módulos
+
+- **ecr**: Configura o repositório ECR.
+- **ecs**: Configura o cluster ECS, task definition e serviço.
+- **alb**: Configura o Application Load Balancer.
+- **sg**: Configura os grupos de segurança.
+
+## Variáveis
+
+As variáveis principais utilizadas no projeto são:
+
+```hcl
 variable "region" {
   type        = string
   description = "Região AWS"
@@ -108,3 +129,28 @@ variable "alb_security_group_id" {
   type        = string
   description = "ID do Security Group do ALB."
 }
+```
+
+## Dependências
+
+Os módulos possuem as seguintes dependências:
+
+- O módulo `sg` deve ser criado antes dos módulos `alb` e `ecs`.
+- O módulo `ecr` deve ser criado antes do módulo `ecs`.
+- O módulo `alb` deve ser criado antes do módulo `ecs`.
+
+## Comandos
+
+Para aplicar as configurações, utilize os seguintes comandos:
+
+```sh
+terragrunt init
+terragrunt plan
+terragrunt apply
+```
+
+Certifique-se de que todas as variáveis necessárias estão definidas no arquivo `variables.tfvars`.
+
+## Licença
+
+Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.

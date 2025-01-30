@@ -7,3 +7,13 @@ variable "security_group_name" {
   type        = string
   description = "Nome do Security Group para o ECS"
 }
+
+variable "alb_security_group_id" {
+  type        = string
+  description = "ID do Security Group do ALB"
+}
+
+variable "alb_security_group_name" {
+  type        = string
+  description = "Nome do Security Group do ALB"
+}

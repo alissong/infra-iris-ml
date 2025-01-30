@@ -83,3 +83,8 @@ variable "ecs_service_name" {
   type        = string
   description = "Nome do serviço ECS"
 }
+
+variable "resource_name_prefix" {
+  type        = string
+  description = "Prefixo para os nomes dos recursos"
+}

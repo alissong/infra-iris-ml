@@ -5,3 +5,4 @@ resource "aws_lb_target_group" "ml_tg" {
   vpc_id      = var.vpc_id
   target_type = "ip"
 }
+ 

@@ -4,6 +4,9 @@ region = "us-east-1"
 # Ambiente (dev, staging, prod)
 environment = "dev"
 
+# Prefixo para os nomes dos recursos
+resource_name_prefix = "iris-ml-app"
+
 # ID da VPC onde os recursos serão criados
 vpc_id = "vpc-06d92fe8a8a2338f0"
 
@@ -23,9 +26,13 @@ ecs_cluster_name = "iris-ml-app-ecs-cluster"
 # Nome do Security Group para ALB
 alb_security_group_name = "iris-ml-app-security-group"
 
+# ID do Security Group para ALB
+alb_security_group_id = "sg-0b3b3b3b3b3b3b3b3"
+
 # Nome do Security Group para ECS
 ecs_security_group_name = "iris-ml-app-security-group"
 
+# Nome do Security Group para ECS
 security_group_name = "iris-ml-app-security-group"
 
 # URL do repositório ECR

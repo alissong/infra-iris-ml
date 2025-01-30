@@ -1,5 +1,5 @@
 resource "aws_ecs_service" "ml_service" {
-  name            = var.ecs_service_name
+  name            = "${var.resource_name_prefix}-${var.ecs_service_name}"
   cluster         = var.ecs_cluster_id   # Passando o cluster como variável
   task_definition = var.ecs_task_definition_arn  # Task como variável
   desired_count   = var.ecs_desired_count
