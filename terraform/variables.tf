@@ -108,3 +108,8 @@ variable "alb_security_group_id" {
   type        = string
   description = "ID do Security Group do ALB."
 }
+
+variable "acm_certificate_arn" {
+  type        = string
+  description = "ARN do certificado ACM para HTTPS"
+}

@@ -8,16 +8,16 @@ environment = "dev"
 resource_name_prefix = "iris-ml-app"
 
 # ID da VPC onde os recursos serão criados
-vpc_id = "vpc-06d92fe8a8a2338f0"
+vpc_id = "YOUR_VPC_ID"
 
 # Subnets disponíveis para o ECS e ALB
 subnets = [
-  "subnet-0522f692a71b93afa",
-  "subnet-05f058473e31031e2",
-  "subnet-0e6fcadc1e484717b",
-  "subnet-01a3b68c5b08053e0",
-  "subnet-099e91ac697f2c4f7",
-  "subnet-06d4b5cee3e9e8977"
+  "YOUR_SUBNET_ID_1",
+  "YOUR_SUBNET_ID_2",
+  "YOUR_SUBNET_ID_3",
+  "YOUR_SUBNET_ID_4",
+  "YOUR_SUBNET_ID_5",
+  "YOUR_SUBNET_ID_6"
 ]
 
 # Nome do cluster ECS
@@ -27,7 +27,7 @@ ecs_cluster_name = "iris-ml-app-ecs-cluster"
 alb_security_group_name = "iris-ml-app-security-group"
 
 # ID do Security Group para ALB
-alb_security_group_id = "sg-0b3b3b3b3b3b3b3b3"
+alb_security_group_id = "YOUR_ALB_SECURITY_GROUP_ID"
 
 # Nome do Security Group para ECS
 ecs_security_group_name = "iris-ml-app-security-group"
@@ -36,7 +36,7 @@ ecs_security_group_name = "iris-ml-app-security-group"
 security_group_name = "iris-ml-app-security-group"
 
 # URL do repositório ECR
-ecr_repository_url = "123456789012.dkr.ecr.us-east-1.amazonaws.com/iris-ml-app-ecr"
+ecr_repository_url = "YOUR_ECR_REPOSITORY_URL"
 
 # Configuração do ECS Service
 ecs_desired_count = 1
@@ -50,4 +50,7 @@ ecs_container_name = "iris-ml-app-service"
 ecs_container_port = 8000
 
 # ARN da role de execução do ECS Task
-ecs_execution_role_arn = "arn:aws:iam::123456789012:role/iris-ml-app-ecs-execution-role"
+ecs_execution_role_arn = "YOUR_ECS_EXECUTION_ROLE_ARN"
+
+# ARN do certificado ACM para HTTPS
+acm_certificate_arn = "YOUR_ACM_CERTIFICATE_ARN"

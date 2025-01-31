@@ -1,5 +1,5 @@
 resource "aws_security_group" "ecs_sg" {
-  name        = "${var.security_group_name}-ecs"
+  name        = "${var.resource_name_prefix}-ecs-sg"
   description = "Security group para o ECS"
   vpc_id      = var.vpc_id
 
@@ -37,7 +37,7 @@ resource "aws_security_group" "ecs_sg" {
 }
 
 resource "aws_security_group" "alb_sg" {
-  name        = "${var.security_group_name}-alb"
+  name        = "${var.resource_name_prefix}-alb-sg"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
 
