@@ -29,12 +29,11 @@ inputs = {
   ecs_execution_role_arn  = local.execution_role_name
   ecs_container_name      = local.ecs_service_name
   execution_role_name     = local.execution_role_name
-  ecs_service_name    = local.ecs_service_name
-  ecr_repository_name = local.ecr_repository_name
-  alb_security_group_id = local.alb_security_group_id
+  ecs_service_name        = local.ecs_service_name
+  ecr_repository_name     = local.ecr_repository_name
+  alb_security_group_id   = local.alb_security_group_id
 
   vpc_id               = "vpc-06d92fe8a8a2338f0"
-  ecs_cluster_name     = "ml-cluster"
   subnets = [
     "subnet-0522f692a71b93afa",
     "subnet-05f058473e31031e2",
@@ -43,4 +42,6 @@ inputs = {
     "subnet-099e91ac697f2c4f7",
     "subnet-06d4b5cee3e9e8977"
   ]
+
+  acm_certificate_arn = "arn:aws:acm:us-east-1:338846672827:certificate/5591839b-8804-4ca9-a133-4203d80aa6eb"
 }

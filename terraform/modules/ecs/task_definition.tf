@@ -6,10 +6,14 @@ resource "aws_ecs_task_definition" "ml_task" {
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
+  locals {
+    container_image = length(var.ecr_repository_url) > 0 ? "${var.ecr_repository_url}:latest" : "amazon/amazon-ecs-sample"
+  }
+
   container_definitions = jsonencode([
     {
       name      = "ml-container"
-      image     = length(var.ecr_repository_url) > 0 ? "${var.ecr_repository_url}:latest" : "amazon/amazon-ecs-sample"
+      image     = local.container_image
       cpu       = 256
       memory    = 512
       essential = true
