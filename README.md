@@ -136,6 +136,12 @@ variable "acm_certificate_arn" {
 }
 ```
 
+## Infrastructure Workflow
+
+Below is a diagram representing the infrastructure workflow:
+
+![Infrastructure Workflow](images/image.png)
+
 ## Configuration
 
 Before applying the configurations, fill in the `variables.tfvars` file with your environment data:
