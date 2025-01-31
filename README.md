@@ -219,6 +219,41 @@ terragrunt apply
 
 Make sure all necessary variables are defined in the `variables.tfvars` file.
 
+## Future Implementations
+
+### Route 53 Configuration
+
+In future implementations, we plan to configure AWS Route 53 to manage DNS for the Iris ML application. This will include:
+
+- Setting up hosted zones
+- Configuring DNS records for the application
+- Integrating Route 53 with the ALB for seamless domain management
+
+### CI/CD Improvements
+
+We also plan to enhance the CI/CD process by adding a manual destroy step in the workflow. This will allow authorized users to manually trigger the destruction of the infrastructure when needed. The workflow will include:
+
+- A manual approval step to confirm the destruction
+- Execution of `terragrunt destroy` to remove the infrastructure
+
+### Commands
+
+To manually apply the configurations, use the following commands:
+
+```sh
+terragrunt init
+terragrunt plan
+terragrunt apply
+```
+
+To manually destroy the configurations, use the following command:
+
+```sh
+terragrunt destroy
+```
+
+Ensure that all necessary variables are defined in the `variables.tfvars` file.
+
 ## License
 
 This project is licensed under the MIT license. See the LICENSE file for more details.
