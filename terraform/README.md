@@ -1,159 +1,159 @@
-# Infraestrutura para Aplicação Iris ML
+# Infrastructure for Iris ML Application
 
-Este projeto configura a infraestrutura necessária para a aplicação Iris ML utilizando Terraform e Terragrunt. A infraestrutura inclui:
+This project configures the necessary infrastructure for the Iris ML application using Terraform and Terragrunt. The infrastructure includes:
 
-- Repositório ECR para armazenar imagens Docker
-- Cluster ECS para executar containers
-- ALB para balanceamento de carga e acesso externo via HTTPS
-- Grupos de segurança para controlar o tráfego de rede
+- ECR repository to store Docker images
+- ECS cluster to run containers
+- ALB for load balancing and external access via HTTPS
+- Security groups to control network traffic
 
-## Estrutura dos Módulos
+## Module Structure
 
-- **ecr**: Configura o repositório ECR.
-- **ecs**: Configura o cluster ECS, task definition e serviço.
-- **alb**: Configura o Application Load Balancer.
-- **sg**: Configura os grupos de segurança.
+- **ecr**: Configures the ECR repository.
+- **ecs**: Configures the ECS cluster, task definition, and service.
+- **alb**: Configures the Application Load Balancer.
+- **sg**: Configures the security groups.
 
-## Variáveis
+## Variables
 
-As variáveis principais utilizadas no projeto são:
+The main variables used in the project are:
 
 ```hcl
 variable "region" {
   type        = string
-  description = "Região AWS"
+  description = "AWS region"
   default     = "us-east-1"
 }
 
 variable "environment" {
   type        = string
-  description = "Nome do ambiente (dev, staging, prod)"
+  description = "Environment name (dev, staging, prod)"
   default     = "dev"
 }
 
 variable "vpc_id" {
   type        = string
-  description = "ID da VPC onde os recursos serão criados"
+  description = "ID of the VPC where resources will be created"
 }
 
 variable "subnets" {
   type        = list(string)
-  description = "Lista de subnets para o ALB e ECS"
+  description = "List of subnets for ALB and ECS"
 }
 
 variable "ecs_cluster_name" {
   type        = string
-  description = "Nome do cluster ECS"
+  description = "Name of the ECS cluster"
 }
 
 variable "alb_security_group_name" {
   type        = string
-  description = "Nome do Security Group do ALB"
+  description = "Name of the ALB Security Group"
 }
 
 variable "ecs_security_group_name" {
   type        = string
-  description = "Nome do Security Group do ECS"
+  description = "Name of the ECS Security Group"
 }
 
 variable "ecr_repository_url" {
   type        = string
-  description = "URL do repositório ECR para armazenar as imagens do ECS"
+  description = "URL of the ECR repository to store ECS images"
 }
 
 variable "ecs_desired_count" {
   type        = number
-  description = "Número desejado de instâncias no ECS Service"
+  description = "Desired number of instances in the ECS Service"
 }
 
 variable "ecs_execution_role_arn" {
   type        = string
-  description = "ARN da Role de execução do ECS Task"
+  description = "ARN of the ECS Task execution role"
 }
 
 variable "ecs_container_port" {
   type        = number
-  description = "Porta usada pelo container ECS"
+  description = "Port used by the ECS container"
   default     = 8000
 }
 
 variable "ecs_launch_type" {
   type        = string
-  description = "Tipo de lançamento do ECS (EC2 ou FARGATE)"
+  description = "ECS launch type (EC2 or FARGATE)"
   default     = "FARGATE"
 }
 
 variable "ecs_task_family" {
   type        = string
-  description = "Nome da família da Task Definition"
+  description = "Name of the Task Definition family"
 }
 
 variable "ecs_cpu" {
   type        = string
-  description = "CPU para a ECS Task"
+  description = "CPU for the ECS Task"
   default     = "256"
 }
 
 variable "ecs_memory" {
   type        = string
-  description = "Memória para a ECS Task"
+  description = "Memory for the ECS Task"
   default     = "512"
 }
 
 variable "ecs_container_name" {
   type        = string
-  description = "Nome do container ECS"
+  description = "Name of the ECS container"
 }
 
 variable "security_group_name" {
   type        = string
-  description = "Nome do Security Group para o ECS"
+  description = "Name of the Security Group for ECS"
 }
 
 variable "execution_role_name" {
   type        = string
-  description = "Nome da Role de execução do ECS Task"
+  description = "Name of the ECS Task execution role"
 }
 
 variable "ecs_service_name" {
   type        = string
-  description = "Nome do ECS Service"
+  description = "Name of the ECS Service"
 }
 
 variable "ecr_repository_name" {
   type        = string
-  description = "Nome do repositório ECR"
+  description = "Name of the ECR repository"
 }
 
 variable "alb_security_group_id" {
   type        = string
-  description = "ID do Security Group do ALB."
+  description = "ID of the ALB Security Group."
 }
 
 variable "acm_certificate_arn" {
   type        = string
-  description = "ARN do certificado ACM para HTTPS"
+  description = "ARN of the ACM certificate for HTTPS"
 }
 ```
 
-## Configuração
+## Configuration
 
-Antes de aplicar as configurações, preencha o arquivo `variables.tfvars` com os dados do seu ambiente:
+Before applying the configurations, fill in the `variables.tfvars` file with your environment data:
 
 ```hcl
-# Definição da região AWS
+# AWS region definition
 region = "us-east-1"
 
-# Ambiente (dev, staging, prod)
+# Environment (dev, staging, prod)
 environment = "dev"
 
-# Prefixo para os nomes dos recursos
+# Prefix for resource names
 resource_name_prefix = "iris-ml-app"
 
-# ID da VPC onde os recursos serão criados
+# ID of the VPC where resources will be created
 vpc_id = "YOUR_VPC_ID"
 
-# Subnets disponíveis para o ECS e ALB
+# Available subnets for ECS and ALB
 subnets = [
   "YOUR_SUBNET_ID_1",
   "YOUR_SUBNET_ID_2",
@@ -163,53 +163,67 @@ subnets = [
   "YOUR_SUBNET_ID_6"
 ]
 
-# Nome do cluster ECS
+# Name of the ECS cluster
 ecs_cluster_name = "iris-ml-app-ecs-cluster"
 
-# Nome do Security Group para ALB
+# Name of the ALB Security Group
 alb_security_group_name = "iris-ml-app-security-group"
 
-# ID do Security Group para ALB
+# ID of the ALB Security Group
 alb_security_group_id = "YOUR_ALB_SECURITY_GROUP_ID"
 
-# Nome do Security Group para ECS
+# Name of the ECS Security Group
 ecs_security_group_name = "iris-ml-app-security-group"
 
-# Nome do Security Group para ECS
+# Name of the ECS Security Group
 security_group_name = "iris-ml-app-security-group"
 
-# URL do repositório ECR
+# URL of the ECR repository
 ecr_repository_url = "YOUR_ECR_REPOSITORY_URL"
 
-# Configuração do ECS Service
+# ECS Service configuration
 ecs_desired_count = 1
 ecs_launch_type   = "FARGATE"
 
-# Configuração do ECS Task Definition
+# ECS Task Definition configuration
 ecs_task_family    = "iris-ml-app-task"
 ecs_cpu            = "256"
 ecs_memory         = "512"
 ecs_container_name = "iris-ml-app-service"
 ecs_container_port = 8000
 
-# ARN da role de execução do ECS Task
+# ARN of the ECS Task execution role
 ecs_execution_role_arn = "YOUR_ECS_EXECUTION_ROLE_ARN"
 
-# ARN do certificado ACM para HTTPS
+# ARN of the ACM certificate for HTTPS
 acm_certificate_arn = "YOUR_ACM_CERTIFICATE_ARN"
 ```
 
-## Dependências
+## Dependencies
 
-Os módulos possuem as seguintes dependências:
+The modules have the following dependencies:
 
-- O módulo `sg` deve ser criado antes dos módulos `alb` e `ecs`.
-- O módulo `ecr` deve ser criado antes do módulo `ecs`.
-- O módulo `alb` deve ser criado antes do módulo `ecs`.
+- The `sg` module must be created before the `alb` and `ecs` modules.
+- The `ecr` module must be created before the `ecs` module.
+- The `alb` module must be created before the `ecs` module.
 
-## Comandos
+## CI/CD Process
 
-Para aplicar as configurações, utilize os seguintes comandos:
+This project uses GitHub Actions to automate the CI/CD process. The workflow is divided into three main stages:
+
+1. **Terraform Plan**: Generates a Terraform execution plan.
+2. **Manual Approval**: Creates a GitHub issue to request manual approval before applying the changes.
+3. **Terraform Apply**: Applies the changes to the environment after approval.
+
+### Workflow Details
+
+- **Terraform Plan**: This workflow is triggered automatically when there is a push to the `main` branch or manually via GitHub Actions. It generates a Terraform execution plan.
+- **Manual Approval**: After the plan is generated, a GitHub issue is created requesting approval to apply the changes. An authorized user must approve the issue to proceed.
+- **Terraform Apply**: After approval, the workflow applies the changes to the environment using the `terragrunt apply` command.
+
+### Commands
+
+To manually apply the configurations, use the following commands:
 
 ```sh
 terragrunt init
@@ -217,8 +231,43 @@ terragrunt plan
 terragrunt apply
 ```
 
-Certifique-se de que todas as variáveis necessárias estão definidas no arquivo `variables.tfvars`.
+Ensure that all necessary variables are defined in the `variables.tfvars` file.
 
-## Licença
+## Future Implementations
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+### Route 53 Configuration
+
+In future implementations, we plan to configure AWS Route 53 to manage DNS for the Iris ML application. This will include:
+
+- Setting up hosted zones
+- Configuring DNS records for the application
+- Integrating Route 53 with the ALB for seamless domain management
+
+### CI/CD Improvements
+
+We also plan to enhance the CI/CD process by adding a manual destroy step in the workflow. This will allow authorized users to manually trigger the destruction of the infrastructure when needed. The workflow will include:
+
+- A manual approval step to confirm the destruction
+- Execution of `terragrunt destroy` to remove the infrastructure
+
+### Commands
+
+To manually apply the configurations, use the following commands:
+
+```sh
+terragrunt init
+terragrunt plan
+terragrunt apply
+```
+
+To manually destroy the configurations, use the following command:
+
+```sh
+terragrunt destroy
+```
+
+Ensure that all necessary variables are defined in the `variables.tfvars` file.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for more details.
